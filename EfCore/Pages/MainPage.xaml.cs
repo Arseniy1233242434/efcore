@@ -57,5 +57,31 @@ namespace EfCore.Pages
                 service.Remove(student);
             }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (student == null)
+            {
+                MessageBox.Show("Выберите запись!");
+                return;
+            }
+            NavigationService.Navigate(new ProfilePage(student));
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            
+            service.LoadRelation(2);
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            service.LoadRelation(3);
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            service.LoadRelation(1);
+        }
     }
 }

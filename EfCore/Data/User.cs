@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EfCore.Data
@@ -46,6 +47,25 @@ namespace EfCore.Data
         {
             get => _createdAt;
             set => SetProperty(ref _createdAt, value);
+        }
+
+        private UserProfile _userprofile;
+        public UserProfile UserProfile
+        {
+            get => _userprofile;
+            set => SetProperty(ref _userprofile, value);
+        }
+        private Role _role;
+        public Role Role
+        {
+            get => _role;
+            set => SetProperty(ref _role, value);
+        }
+        private int _roleId;
+        public int RoleId
+        {
+            get => _roleId;
+            set => SetProperty(ref _roleId, value);
         }
     }
 }

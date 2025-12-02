@@ -1,8 +1,10 @@
 ﻿using EfCore.Data;
 using EfCore.Pages.Service;
+using Microsoft.Win32;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
 namespace EfCore.Pages
@@ -42,8 +44,26 @@ namespace EfCore.Pages
                 _service.Add(_student);
             NavigationService.GoBack();
         }
-       
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg;*.bmp)|*.png;*.jpeg;*.jpg;*.bmp|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string selectedImagePath = openFileDialog.FileName;
+                if (!isEdit)
+                {
+                    _student.UserProfile=new UserProfile();
+                    _student.UserProfile.AvatarUrl = selectedImagePath;
+                    return;
+                }
+                _student.UserProfile.AvatarUrl = selectedImagePath;
+
+            }
         }
+    }
     public class IsPasswordCorrect : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo

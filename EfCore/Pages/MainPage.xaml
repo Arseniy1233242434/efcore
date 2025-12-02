@@ -24,6 +24,11 @@
             <Button Click="Button_Click" >Добавить</Button>
 
             <Button Click="remove" >Удалить</Button>
+
+            <Button Click="Button_Click_1" >Профиль</Button>
+            <Button Click="Button_Click_4">Пользователи</Button>
+            <Button Click="Button_Click_2">Менеджеры</Button>
+            <Button Click="Button_Click_3">Администраторы</Button>
         </StackPanel>
         <ListView Grid.Row="1" ItemsSource="{Binding service.Users}" MouseDoubleClick="ListView_MouseDoubleClick" SelectedItem="{Binding student}"> 
             <ListView.ItemTemplate>
@@ -35,6 +40,24 @@
                             <TextBlock Text="{Binding Name}"/>
                             <TextBlock Text="{Binding Email}"/>
                             <TextBlock Text="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy}}"/>
+                            <TextBlock Text="{Binding Role.Title}"/>
+                            <TextBlock Text="Профиль:"/>
+                            <TextBlock>
+<Run Text="Телефон: "/>
+<Run Text="{Binding UserProfile.Phone}"/>
+                            </TextBlock>
+
+                            <TextBlock>
+<Run Text="День рождения: "/>
+<Run Text="{Binding UserProfile.Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
+                            </TextBlock>
+
+                            <TextBlock>
+<Run Text="Описание: "/>
+<Run Text="{Binding UserProfile.Bio}"/>
+                            </TextBlock>
+                            <TextBlock Text="Аватар:"></TextBlock>
+                            <Image Source="{Binding UserProfile.AvatarUrl}" Width="200" Height="200"></Image>
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>

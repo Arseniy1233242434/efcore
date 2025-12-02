@@ -1,4 +1,5 @@
 ﻿using EfCore.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,6 +27,9 @@ namespace EfCore.Pages.Service
                 Login = user.Login,
                 Password = user.Password,
                 CreatedAt = user.CreatedAt,
+                UserProfile=user.UserProfile,
+                RoleId = user.RoleId,
+                Role=user.Role,
             };
             _db.Add<User>(_user);
             Commit();
@@ -34,7 +38,9 @@ namespace EfCore.Pages.Service
         public int Commit() => _db.SaveChanges();
         public void GetAll()
         {
-            var users = _db.Users.ToList();
+            var users = _db.Users.Include(s => s.UserProfile)
+.Include(s => s.Role)
+.ToList();
             Users.Clear();
             foreach (var user in users)
             {
@@ -48,5 +54,18 @@ namespace EfCore.Pages.Service
                 if (Users.Contains(student))
                     Users.Remove(student);
         }
+        public void LoadRelation(int role)
+        {
+            var users = _db.Users.Include(s => s.UserProfile)
+.Include(s => s.Role).Where(s => s.RoleId == role)
+.ToList();
+            Users.Clear();
+            foreach (var user in users)
+            {
+                Users.Add(user);
+            }
+        }
     }
 }
+    
+
