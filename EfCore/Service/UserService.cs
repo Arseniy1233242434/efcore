@@ -65,7 +65,28 @@ namespace EfCore.Pages.Service
                 Users.Add(user);
             }
         }
+
+
+
+
+
+        public void LoadRelation1(User group, string relation)
+        {
+            var entry = _db.Entry(group);
+            var navigation = entry.Metadata.FindNavigation(relation)
+            ?? throw new InvalidOperationException($"Navigation '{relation}' not found");
+            if (navigation.IsCollection)
+            {
+                entry.Collection(relation).Load();
+            }
+            else
+            {
+                entry.Reference(relation).Load();
+            }
+        }
     }
 }
+    
+
     
 

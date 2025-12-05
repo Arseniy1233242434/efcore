@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251201120411_AddTableRole")]
-    partial class AddTableRole
+    [Migration("20251202122734_AddInterestGroupRelationManyToMany")]
+    partial class AddInterestGroupRelationManyToMany
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,27 @@ namespace EfCore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EfCore.Data.InterestGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterestGroups");
+                });
 
             modelBuilder.Entity("EfCore.Data.Role", b =>
                 {
@@ -79,10 +100,34 @@ namespace EfCore.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("EfCore.Data.UserInterestGroup", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InterestGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsModerator")
+                        .HasColumnType("bit");
+
+                    b.Property<DateOnly>("JoinedAt")
+                        .HasColumnType("date");
+
+                    b.HasKey("UserId", "InterestGroupId");
+
+                    b.HasIndex("InterestGroupId");
+
+                    b.ToTable("UserInterestGroups");
+                });
+
             modelBuilder.Entity("EfCore.Data.UserProfile", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AvatarUrl")
                         .IsRequired()
@@ -99,7 +144,13 @@ namespace EfCore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("UserProfiles");
                 });
@@ -115,15 +166,39 @@ namespace EfCore.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("EfCore.Data.UserInterestGroup", b =>
+                {
+                    b.HasOne("EfCore.Data.InterestGroup", "InterestGroup")
+                        .WithMany("Users")
+                        .HasForeignKey("InterestGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EfCore.Data.User", "User")
+                        .WithMany("InterestGroups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InterestGroup");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EfCore.Data.UserProfile", b =>
                 {
                     b.HasOne("EfCore.Data.User", "User")
                         .WithOne("UserProfile")
-                        .HasForeignKey("EfCore.Data.UserProfile", "Id")
+                        .HasForeignKey("EfCore.Data.UserProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EfCore.Data.InterestGroup", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("EfCore.Data.Role", b =>
@@ -133,6 +208,8 @@ namespace EfCore.Migrations
 
             modelBuilder.Entity("EfCore.Data.User", b =>
                 {
+                    b.Navigation("InterestGroups");
+
                     b.Navigation("UserProfile")
                         .IsRequired();
                 });

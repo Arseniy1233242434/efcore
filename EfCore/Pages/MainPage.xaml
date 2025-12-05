@@ -14,7 +14,9 @@
             <Setter Property="Padding" Value="5"/>
             
         </Style>
+        <local:Converter2 x:Key="g2"/>
     </Page.Resources>
+   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -29,39 +31,78 @@
             <Button Click="Button_Click_4">Пользователи</Button>
             <Button Click="Button_Click_2">Менеджеры</Button>
             <Button Click="Button_Click_3">Администраторы</Button>
+            <Button Click="Button_Click_5">Группы</Button>
+            <Button Click="Button_Click_6">Записаться на курс</Button>
         </StackPanel>
-        <ListView Grid.Row="1" ItemsSource="{Binding service.Users}" MouseDoubleClick="ListView_MouseDoubleClick" SelectedItem="{Binding student}"> 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition ></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+
+            <ListView Grid.Column="0" ItemsSource="{Binding service.Users}" MouseDoubleClick="ListView_MouseDoubleClick" SelectedItem="{Binding student.Student}" SelectionChanged="ListView_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding Id}"/>
-                            <TextBlock Text="{Binding Login}"/>
-                            <TextBlock Text="{Binding Name}"/>
-                            <TextBlock Text="{Binding Email}"/>
-                            <TextBlock Text="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy}}"/>
-                            <TextBlock Text="{Binding Role.Title}"/>
-                            <TextBlock Text="Профиль:"/>
-                            <TextBlock>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Id}"/>
+                                <TextBlock Text="{Binding Login}"/>
+                                <TextBlock Text="{Binding Name}"/>
+                                <TextBlock Text="{Binding Email}"/>
+                                <TextBlock Text="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy}}"/>
+                                <TextBlock Text="{Binding Role.Title}"/>
+                                <TextBlock Text="Профиль:"/>
+                                <TextBlock>
 <Run Text="Телефон: "/>
 <Run Text="{Binding UserProfile.Phone}"/>
-                            </TextBlock>
+                                </TextBlock>
 
-                            <TextBlock>
+                                <TextBlock>
 <Run Text="День рождения: "/>
 <Run Text="{Binding UserProfile.Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
-                            </TextBlock>
+                                </TextBlock>
 
-                            <TextBlock>
+                                <TextBlock>
 <Run Text="Описание: "/>
 <Run Text="{Binding UserProfile.Bio}"/>
-                            </TextBlock>
-                            <TextBlock Text="Аватар:"></TextBlock>
-                            <Image Source="{Binding UserProfile.AvatarUrl}" Width="200" Height="200"></Image>
+                                </TextBlock>
+                                <TextBlock Text="Аватар:"></TextBlock>
+                                <Image Source="{Binding UserProfile.AvatarUrl}" Width="200" Height="200"></Image>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ListView Grid.Column="1"
+ItemsSource="{Binding student.Student.InterestGroups}" >
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <StackPanel>
+                                <TextBlock>
+<Run Text="Название: "/>
+<Run Text="{Binding InterestGroup.Title}"/>
+                                </TextBlock>
+                               
+                                <TextBlock>
+<Run Text="Дата вступления: "/>
+<Run Text="{Binding JoinedAt}"/>
+                                </TextBlock>
+                                <TextBlock>
+<Run Text="Роль: "/>
+<Run Text="{Binding IsModerator, Converter={StaticResource g2}}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+        </Grid>
+       
     </Grid>
 </Page>

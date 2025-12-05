@@ -1,5 +1,6 @@
 ﻿using EfCore.Data;
 using EfCore.Pages.Service;
+using EfCore.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +21,27 @@ namespace EfCore.Pages
     /// <summary>
     /// Логика взаимодействия для MainPage.xaml
     /// </summary>
+    public class a: ObservableObject
+    {
+        private User? student;
+        public User Student
+        {
+            get => student;
+            set => SetProperty(ref student, value);
+        }
+    }
+
+
     public partial class MainPage : Page
     {
         public UserService service { get; set; } = new();
-        public User? student { get; set; } = null;
+        public  a student { get; set; } = null;
         public MainPage()
         {
             InitializeComponent();
+           student=new a();
             DataContext=this;
+           
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -37,16 +51,16 @@ namespace EfCore.Pages
 
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (student == null)
+            if (student.Student == null)
             {
                 MessageBox.Show("Выберите элемент из списка!");
                 return;
             }
-            NavigationService.Navigate(new UserFormPage(student));
+            NavigationService.Navigate(new UserFormPage(student.Student));
         }
         public void remove(object sender, EventArgs e)
         {
-            if (student == null)
+            if (student.Student == null)
             {
                 MessageBox.Show("Выберите запись!");
                 return;
@@ -54,18 +68,18 @@ namespace EfCore.Pages
             if (MessageBox.Show("Вы действительно хотите удалить запись?", "Удалить?",
             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                service.Remove(student);
+                service.Remove(student.Student);
             }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (student == null)
+            if (student.Student == null)
             {
                 MessageBox.Show("Выберите запись!");
                 return;
             }
-            NavigationService.Navigate(new ProfilePage(student));
+            NavigationService.Navigate(new ProfilePage(student.Student));
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -82,6 +96,29 @@ namespace EfCore.Pages
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             service.LoadRelation(1);
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new InterestGroupPage());
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(student.Student != null) 
+            service.LoadRelation1(student.Student, "InterestGroups");
+
+            
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            if (student.Student == null)
+            {
+                MessageBox.Show("Выберите запись!");
+                return;
+            }
+            NavigationService.Navigate(new UserInterestGroupPage(student.Student));
         }
     }
 }

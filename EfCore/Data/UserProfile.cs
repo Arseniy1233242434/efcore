@@ -46,5 +46,11 @@ namespace EfCore.Data
             get => _user;
             set => SetProperty(ref _user, value);
         }
+        private int _userId;
+        public int UserId
+        {
+            get => _userId;
+            set => SetProperty(ref _userId, value);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using EfCore.Service;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -66,6 +67,12 @@ namespace EfCore.Data
         {
             get => _roleId;
             set => SetProperty(ref _roleId, value);
+        }
+        private ObservableCollection<UserInterestGroup> _interestsgroups;
+        public ObservableCollection<UserInterestGroup> InterestGroups
+        {
+            get => _interestsgroups;
+            set => SetProperty(ref _interestsgroups, value);
         }
     }
 }

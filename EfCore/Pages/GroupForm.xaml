@@ -1,0 +1,79 @@
+﻿<Page x:Class="EfCore.Pages.GroupForm"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:EfCore.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="GroupForm">
+    <Page.Resources>
+       
+        <local:Converter2 x:Key="g2"/>
+        
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <StackPanel>
+                <Label>Название группы</Label>
+                <TextBox >
+                    <Binding Path="Title"  >
+                        <Binding.ValidationRules>
+                            <local:IsTitleCorrect />
+                        </Binding.ValidationRules>
+                    </Binding>
+
+
+                </TextBox>
+                <Label></Label>
+                <Label>Описание:</Label>
+                <TextBox Text="{Binding Description}"/>
+            </StackPanel>
+            <StackPanel>
+                <Button Click="Button_Click">Сохранить</Button>
+                <Button Click="Button_Click_1">Назад</Button>
+            </StackPanel>
+        </StackPanel>
+        <ListView Grid.Column="1"
+ItemsSource="{Binding Users}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel>
+                           
+                            <TextBlock Text="Профиль:"/>
+                            <TextBlock>
+<Run Text="Телефон: "/>
+<Run Text="{Binding User.UserProfile.Phone}"/>
+                            </TextBlock>
+
+                            <TextBlock>
+<Run Text="День рождения: "/>
+<Run Text="{Binding User.UserProfile.Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
+                            </TextBlock>
+
+                            <TextBlock>
+<Run Text="Описание: "/>
+<Run Text="{Binding User.UserProfile.Bio}"/>
+                            </TextBlock>
+                            <TextBlock Text="Аватар:"></TextBlock>
+                            <Image Source="{Binding User.UserProfile.AvatarUrl}" Width="200" Height="200"></Image>
+                            <TextBlock>
+<Run Text="Дата вступления: "/>
+<Run Text="{Binding JoinedAt}"/>
+                            </TextBlock>
+                            <TextBlock>
+<Run Text="Роль: "/>
+<Run Text="{Binding IsModerator, Converter={StaticResource g2}}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>
